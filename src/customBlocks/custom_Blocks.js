@@ -1,5 +1,8 @@
 import Blockly from "blockly";
 import { javascriptGenerator } from "blockly/javascript";
+import { useDispatch, useSelector } from "react-redux";
+import { store } from "../store/store";
+import { setAngle } from "../store/characterSlice";
 
 // Motion Blocks
 Blockly.Blocks["move_y"] = {
@@ -194,11 +197,12 @@ Blockly.Blocks["key_pressed"] = {
 
 // Move y block
 javascriptGenerator["move_y"] = (block) => {
-
   var number_move_y = block.getFieldValue("move-y");
 
+  var active_sprite = store.getState().characters.active;
+
   var code = `
-    var sprite = document.getElementById("sprite");
+    var sprite = document.getElementById("${active_sprite}");
     var offset = sprite.offsetTop - sprite.scrollTop;
 
     if(${number_move_y} > 0) {
@@ -216,11 +220,12 @@ javascriptGenerator["move_y"] = (block) => {
 
 // Move x block
 javascriptGenerator["move_x"] = (block) => {
-
   var number_move_x = block.getFieldValue("move-x");
 
+  var active_sprite = store.getState().characters.active;
+
   var code = `
-    var sprite = document.getElementById("sprite");
+    var sprite = document.getElementById("${active_sprite}");
     var offset = sprite.offsetLeft - sprite.scrollLeft;
 
     if(${number_move_x} > 0) {
@@ -238,12 +243,16 @@ javascriptGenerator["move_x"] = (block) => {
 
 // Turn clockwise block
 javascriptGenerator["turn_clockwise"] = (block) => {
-
   var angle_turn_right = block.getFieldValue("turn-right");
 
+  var active_sprite = store.getState().characters.active;
+
+  store.dispatch(setAngle(angle_turn_right));
+  var angle = store.getState().characters.characters[0].angle;
+
   var code = `
-    var sprite = document.getElementById("sprite");
-    sprite.style.transform = 'rotate(${angle_turn_right}deg)';
+    var sprite = document.getElementById("${active_sprite}");
+    sprite.style.transform = 'rotate(${angle_turn_right + angle}deg)';
   `;
 
   return code;
@@ -251,12 +260,16 @@ javascriptGenerator["turn_clockwise"] = (block) => {
 
 // Turn anti-clockwise block
 javascriptGenerator["turn_anti_clockwise"] = (block) => {
-
   var angle_turn_left = block.getFieldValue("turn-left");
 
+  var active_sprite = store.getState().characters.active;
+
+  store.dispatch(setAngle(angle_turn_left));
+  var angle = store.getState().character.characters[0].angle;
+
   var code = `
-    var sprite = document.getElementById("sprite");
-    sprite.style.transform = 'rotate(-${angle_turn_left}deg)';
+    var sprite = document.getElementById("${active_sprite}");
+    sprite.style.transform = 'rotate(-${angle_turn_left + angle}deg)';
   `;
 
   return code;
@@ -264,12 +277,13 @@ javascriptGenerator["turn_anti_clockwise"] = (block) => {
 
 // Goto location block
 javascriptGenerator["goto_custom_location"] = (block) => {
+  var active_sprite = store.getState().characters.active;
 
   var number_goto_x = block.getFieldValue("goto-x");
   var number_goto_y = block.getFieldValue("goto-y");
 
   var code = `
-    var sprite = document.getElementById("sprite");
+    var sprite = document.getElementById("${active_sprite}");
     var offsetTop = sprite.offsetTop - sprite.scrollTop;
     var offsetLeft = sprite.offsetLeft - sprite.scrollLeft;
 
@@ -285,11 +299,12 @@ javascriptGenerator["goto_custom_location"] = (block) => {
 
 // Size block
 javascriptGenerator["sprite_size"] = (block) => {
-
   var number_size = block.getFieldValue("size");
 
+  var active_sprite = store.getState().characters.active;
+
   var code = `
-    var sprite = document.getElementById("sprite");
+    var sprite = document.getElementById("${active_sprite}");
 
     sprite.style.transform = 'scale(${number_size})';
   `;
@@ -299,11 +314,12 @@ javascriptGenerator["sprite_size"] = (block) => {
 
 // Say message block
 javascriptGenerator["say_message"] = (block) => {
-
   var text_message = block.getFieldValue("message");
 
+  var active_sprite = store.getState().characters.active;
+
   var code = `
-    var messageBox = document.getElementById("message-box-2");
+    var messageBox = document.getElementById("${active_sprite}-message-box-2");
 
     messageBox.innerHTML = '${text_message}';
     messageBox.style.display = 'block';
@@ -314,20 +330,21 @@ javascriptGenerator["say_message"] = (block) => {
 
 // Say timed message block
 javascriptGenerator["say_message_timed"] = (block) => {
+  var active_sprite = store.getState().characters.active;
 
   var text_message = block.getFieldValue("message");
   var number_time = block.getFieldValue("time");
 
   var code = `
-    var el = document.getElementById("message-box-2");
+    var messageBox = document.getElementById("${active_sprite}-message-box-2");
 
     function hide() {
 
-      el.style.display = 'none';
+      messageBox.style.display = 'none';
     }
 
-    el.innerHTML = '${text_message}';
-    el.style.display = 'block';
+    messageBox.innerHTML = '${text_message}';
+    messageBox.style.display = 'block';
 
     setTimeout(hide, ${number_time}*1000)
   `;
@@ -337,10 +354,11 @@ javascriptGenerator["say_message_timed"] = (block) => {
 
 // Show sprite block
 javascriptGenerator["show_sprite"] = (block) => {
+  var active_sprite = store.getState().characters.active;
 
   var code = `
-    var el = document.getElementById("sprite");
-    el.style.display = 'block';
+    var sprite = document.getElementById("${active_sprite}");
+    sprite.style.display = 'block';
   `;
 
   return code;
@@ -348,10 +366,11 @@ javascriptGenerator["show_sprite"] = (block) => {
 
 // Hide sprite block
 javascriptGenerator["hide_sprite"] = (block) => {
+  var active_sprite = store.getState().characters.active;
 
   var code = `
-    var el = document.getElementById("sprite");
-    el.style.display = 'none';
+    var sprite = document.getElementById("${active_sprite}");
+    sprite.style.display = 'none';
   `;
 
   return code;
@@ -359,10 +378,11 @@ javascriptGenerator["hide_sprite"] = (block) => {
 
 // Hide message block
 javascriptGenerator["hide_message"] = (block) => {
+  var active_sprite = store.getState().characters.active;
 
   var code = `
-    var el = document.getElementById("message-box-2");
-    el.style.display = 'none';
+    var messageBox = document.getElementById("${active_sprite}-message-box-2");
+    messageBox.style.display = 'none';
   `;
 
   return code;
@@ -370,7 +390,6 @@ javascriptGenerator["hide_message"] = (block) => {
 
 // Key press event block
 javascriptGenerator["key_pressed"] = (block) => {
-
   var dropdown_pressed_key = block.getFieldValue("pressed_key");
 
   var code = "...;\n";

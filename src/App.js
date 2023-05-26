@@ -92,6 +92,29 @@ const App = () => {
           },
         ],
       },
+      {
+        kind: "category",
+        name: "Logic",
+        colour: "#11cb0b",
+        contents: [
+          {
+            kind: "block",
+            type: "math_number",
+          },
+          {
+            kind: "block",
+            type: "logic_compare",
+          },
+          {
+            kind: "block",
+            type: "logic_operation",
+          },
+          {
+            kind: "block",
+            type: "logic_boolean",
+          },
+        ],
+      },
     ],
   };
 
