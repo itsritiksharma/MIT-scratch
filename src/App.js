@@ -73,7 +73,7 @@ const App = () => {
         contents: [
           {
             kind: "block",
-            type: "key_pressed",
+            type: "key_press_event",
           },
         ],
       },
@@ -88,18 +88,19 @@ const App = () => {
           },
           {
             kind: "block",
-            type: "controls_whileUntil",
+            type: "controls_repeat_ext",
           },
         ],
       },
       {
         kind: "category",
         name: "Logic",
-        colour: "#11cb0b",
+        colour: "#5C81A6",
         contents: [
           {
             kind: "block",
             type: "math_number",
+            colour: 120,
           },
           {
             kind: "block",
@@ -112,6 +113,21 @@ const App = () => {
           {
             kind: "block",
             type: "logic_boolean",
+          },
+        ],
+      },
+      {
+        kind: "category",
+        name: "Variables",
+        colour: "#11cb0b",
+        contents: [
+          {
+            kind: "block",
+            type: "variables_set",
+          },
+          {
+            kind: "block",
+            type: "variables_get",
           },
         ],
       },
@@ -128,7 +144,7 @@ const App = () => {
             trashcan={true}
             toolbox={toolboxCategories}
             move={{
-              scrollbars: true,
+              scrollbars: false,
               drag: true,
               wheel: true,
             }}

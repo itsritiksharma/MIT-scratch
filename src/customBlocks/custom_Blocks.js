@@ -174,20 +174,22 @@ Blockly.Blocks["hide_message"] = {
   },
 };
 
-// Events blocks
-Blockly.Blocks["key_pressed"] = {
+// Events
+Blockly.Blocks["key_press_event"] = {
   init: function () {
     this.appendDummyInput()
       .appendField("when")
       .appendField(
         new Blockly.FieldDropdown([
-          ["space key pressed", "space"],
-          ["enter key pressed", "enter"],
+          ["space", "Space"],
+          ["enter", "Enter"],
         ]),
         "pressed_key"
-      );
+      )
+      .appendField("pressed");
+    this.appendStatementInput("to_execute").setCheck(null).appendField("do");
     this.setNextStatement(true, null);
-    this.setColour(60);
+    this.setColour(65);
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -389,10 +391,20 @@ javascriptGenerator["hide_message"] = (block) => {
 };
 
 // Key press event block
-javascriptGenerator["key_pressed"] = (block) => {
-  var dropdown_pressed_key = block.getFieldValue("pressed_key");
-
-  var code = "...;\n";
-
+javascriptGenerator["key_press_event"] = function (block) {
+  var dropdown_key = block.getFieldValue("pressed_key");
+  var statements_to_execute = javascriptGenerator.statementToCode(
+    block,
+    "to_execute"
+  );
+  var code = `
+    window.addEventListener("keydown", function (event) {
+      if (event.code === "${dropdown_key}") {
+        ${statements_to_execute}
+      } else {
+        return;
+      }
+    });
+  `;
   return code;
 };
