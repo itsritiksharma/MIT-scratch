@@ -1,24 +1,24 @@
 import React from "react";
 import CatSprite from "./CatSprite";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "hooks/useTypedHooks";
 import {
   addCharacter,
   setActive,
   removeCharacter,
 } from "../store/characterSlice";
 
-const PreviewArea = () => {
-  const dispatch = useDispatch();
-  const allCharacters = useSelector((state) => state.characters);
+const PreviewArea = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const allCharacters = useAppSelector((state) => state.characters);
 
   var pos1 = 0,
     pos2 = 0,
     pos3 = 0,
     pos4 = 0;
 
-  let elmnt = null;
+  let elmnt: any = null;
 
-  function dragMouseDown(e, id) {
+  function dragMouseDown(e: any, id: string) {
     elmnt = document.getElementById(id);
 
     e = e || window.event;
@@ -31,7 +31,7 @@ const PreviewArea = () => {
     document.onmousemove = elementDrag;
   }
 
-  function elementDrag(e) {
+  function elementDrag(e: any) {
     e = e || window.event;
     e.preventDefault();
     // calculate the new cursor position:
@@ -101,16 +101,6 @@ const PreviewArea = () => {
             onMouseDown={(e) => dragMouseDown(e, character.id)}
           >
             <div>
-              <div
-                id={`${character.id}-message-box-1`}
-                className="hidden relative rounded-full border-2 border-solid border-gray-500 p-2 "
-              >
-                <div className="absolute rounded-full border-2 border-solid border-gray-500 p-2 w-2 top-11 right-2"></div>
-              </div>
-              <div
-                id={`${character.id}-message-box-2`}
-                className="w-24 hidden relative rounded border-2 border-solid border-gray-500 p-2"
-              ></div>
               <CatSprite />
             </div>
           </div>
