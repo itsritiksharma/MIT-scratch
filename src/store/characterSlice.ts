@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+interface InitialState {
+  characters: Array<{ id: string; angle: number }>;
+  active: string;
+}
+
+const initialState: InitialState = {
   characters: [{ id: "sprite0", angle: 0 }],
   active: "sprite0",
 };
@@ -28,13 +33,11 @@ export const characterSlice = createSlice({
       state.active = state.characters[0].id;
     },
     setAngle: (state, action) => {
-      console.log(action.payload);
       state.characters[0].angle = state.characters[0].angle + action.payload;
     },
   },
 });
 
-// Action creators are generated for each case reducer function
 export const { setActive, addCharacter, removeCharacter, setAngle } =
   characterSlice.actions;
 
